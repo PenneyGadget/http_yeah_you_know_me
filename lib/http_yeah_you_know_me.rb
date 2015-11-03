@@ -12,9 +12,9 @@ class HttpYeahYouKnowMe
     request_counter = 0
     loop do
       client = @server.accept
-      request_lines = parse_request(client)
       request_counter += 1
-      output = build_response_body(request_counter, parse_request_info(request_lines))
+      request_lines = parse_request(client)
+      output = build_response_body(request_counter, request_lines)
       headers = build_response_headers(output)
       return_response(client, headers, output)
     end
@@ -22,51 +22,28 @@ class HttpYeahYouKnowMe
   end
 
   def parse_request(client)
-    request_lines = []
-    while line = client.gets and !line.chomp.empty?
-      request_lines << line.chomp
-    end
-    request_lines
-  end
-
-  def parse_request_info(request_lines)
+    counter = 0
     info = Hash.new
-    info["Verb: "] = request_lines.first.split(" ").first
-    info["Path: "] = request_lines.first.split(" ")[1]
-    info["Protocol: "] = request_lines.first.split(" ")[2]
-
-    request_lines.each do |line|
-      if line.start_with?("Host")
-        info["Host: "] = line.split(":")[1]
+    while line = client.gets and !line.chomp.empty?
+        if counter == 0
+          info["Verb"] = line.split(" ").first
+          info["Path"] = line.split(" ")[1]
+          info["Protocol"] = line.split(" ")[2]
+        else
+          keyval = line.scan(/([^:]*):(.*$)/)
+          info[keyval[0][0]] = keyval[0][1]
+        end
+        counter += 1
       end
-    end
-
-    request_lines.each do |line|
-      if line.start_with?("Host")
-        info["Port: "] = line.split(":")[-1]
-      end
-    end
-
-    request_lines.each do |line|
-      if line.start_with?("Host")
-        info["Origin: "] = line.split(":")[1]
-      end
-    end
-
-    request_lines.each do |line|
-      if line.start_with?("Accept: ")
-        info["Accept: "] = line.split(" ")[1]
-      end
-    end
     info
   end
 
-  def choose_path
-
-  end
-
-  def build_response_body(request_counter, clean_request_info)
-    response = "<pre>" + ("Hello, World! (#{request_counter})\n\n#{parse_request_info}") + "</pre>"
+  def build_response_body(request_counter, parse_request)
+    response  = "<pre>" + "Hello, World! (#{request_counter})\n\n"
+    parse_request.each do |key, value|
+      response += "#{key}" + ": " + "#{value}\n"
+    end
+    response += "</pre>"
     output = "<html><head></head><body>#{response}</body></html>"
   end
 
