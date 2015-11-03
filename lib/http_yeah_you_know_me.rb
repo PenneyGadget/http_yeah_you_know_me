@@ -13,7 +13,7 @@ class HttpYeahYouKnowMe
       client = @server.accept
       request_lines = parse_request(client)
       request_counter += 1
-      output = build_response_body(request_counter, request_lines)
+      output = build_response_body(request_counter, clean_request_info(request_lines))
       headers = build_response_headers(output)
       return_response(client, headers, output)
     end
