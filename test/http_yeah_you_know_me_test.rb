@@ -28,9 +28,17 @@ class HttpYeahYouKnowMeTest < Minitest::Test
                      "Host: 127.0.0.1\n" +
                      "Port: 9292\n" +
                      "Origin: 127.0.0.1\n" +
-                     "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\n"
+                     "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\n"
 
-    assert_equal expected, http.clean_request_info(request_lines)
+    assert_equal expected, http.parse_request_info(request_lines)
+  end
+
+  def test_build_response_body
+
+  end
+
+  def test_build_response_headers
+
   end
 
 end

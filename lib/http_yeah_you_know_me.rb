@@ -5,6 +5,7 @@ class HttpYeahYouKnowMe
 
   def initialize(port)
     @server = TCPServer.new(port)
+    # @path = "#{request_lines.first.split(" ")[1]}\n"
   end
 
   def run
@@ -13,7 +14,7 @@ class HttpYeahYouKnowMe
       client = @server.accept
       request_lines = parse_request(client)
       request_counter += 1
-      output = build_response_body(request_counter, clean_request_info(request_lines))
+      output = build_response_body(request_counter, parse_request_info(request_lines))
       headers = build_response_headers(output)
       return_response(client, headers, output)
     end
@@ -28,29 +29,53 @@ class HttpYeahYouKnowMe
     request_lines
   end
 
-  def clean_request_info(request_lines)
-    info = ""
-    info << "Verb: #{request_lines.first.split(" ").first}\n"
-    info << "Path: #{request_lines.first.split(" ")[1]}\n"
-    info << "Protocol: #{request_lines.first.split(" ")[2]}\n"
-    info << "#{request_lines[1][0..-6]}\n"
-    info << "Port: #{request_lines[1][-4..-1]}\n"
-    info << "Origin: #{request_lines[1][6..-6]}\n"
-    info << "#{request_lines[2].split(",").insert(-2, "image/webp").join(",")}\n"
+  def parse_request_info(request_lines)
+    info = Hash.new
+    info["Verb: "] = request_lines.first.split(" ").first
+    info["Path: "] = request_lines.first.split(" ")[1]
+    info["Protocol: "] = request_lines.first.split(" ")[2]
+
+    request_lines.each do |line|
+      if line.start_with?("Host")
+        info["Host: "] = line.split(":")[1]
+      end
+    end
+
+    request_lines.each do |line|
+      if line.start_with?("Host")
+        info["Port: "] = line.split(":")[-1]
+      end
+    end
+
+    request_lines.each do |line|
+      if line.start_with?("Host")
+        info["Origin: "] = line.split(":")[1]
+      end
+    end
+
+    request_lines.each do |line|
+      if line.start_with?("Accept: ")
+        info["Accept: "] = line.split(" ")[1]
+      end
+    end
     info
   end
 
+  def choose_path
+
+  end
+
   def build_response_body(request_counter, clean_request_info)
-    response = "<pre>" + ("Hello, World! (#{request_counter})\n\n#{clean_request_info}") + "</pre>"
+    response = "<pre>" + ("Hello, World! (#{request_counter})\n\n#{parse_request_info}") + "</pre>"
     output = "<html><head></head><body>#{response}</body></html>"
   end
 
   def build_response_headers(output)
-    headers = ["http/1.1 200 ok",
-               "date: #{Time.now.strftime('%a, %e %b %Y %H %M %S %z')}",
-               "server: ruby",
-               "content-type: text/html; charset=iso-8859-1",
-               "content-length: #{output.length}\r\n\r\n"].join("\r\n")
+    ["http/1.1 200 ok",
+     "date: #{Time.now.strftime('%a, %e %b %Y %H %M %S %z')}",
+     "server: ruby",
+     "content-type: text/html; charset=iso-8859-1",
+      "content-length: #{output.length}\r\n\r\n"].join("\r\n")
   end
 
   def return_response(client, headers, output)
