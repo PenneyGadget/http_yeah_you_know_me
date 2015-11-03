@@ -28,8 +28,20 @@ class HttpYeahYouKnowMe
     request_lines
   end
 
-  def build_response_body(request_counter, request_lines)
-    response = "<pre>" + ("Hello, World! (#{request_counter})\n\n#{request_lines}") + "</pre>"
+  def clean_request_info(request_lines)
+    info = ""
+    info << "Verb: #{request_lines.first.split(" ").first}\n"
+    info << "Path: #{request_lines.first.split(" ")[1]}\n"
+    info << "Protocol: #{request_lines.first.split(" ")[2]}\n"
+    info << "#{request_lines[1][0..-6]}\n"
+    info << "Port: #{request_lines[1][-4..-1]}\n"
+    info << "Origin: #{request_lines[1][6..-6]}\n"
+    info << "#{request_lines[2].split(",").insert(-2, "image/webp").join(",")}\n"
+    info
+  end
+
+  def build_response_body(request_counter, clean_request_info)
+    response = "<pre>" + ("Hello, World! (#{request_counter})\n\n#{clean_request_info}") + "</pre>"
     output = "<html><head></head><body>#{response}</body></html>"
   end
 
