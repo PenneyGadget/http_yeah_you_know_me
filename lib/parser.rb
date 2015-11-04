@@ -26,11 +26,11 @@ class Parser
   end
 
   def verb
-    #this returns the value for the verb key
+    parse_request["Verb"]
   end
 
   def path
-
+    parse_request["Path"]
   end
 
 end

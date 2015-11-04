@@ -30,11 +30,17 @@ class ParserTest < Minitest::Test
   end
 
   def test_we_can_extricate_the_verb
+    client = StringIO.new("GET / HTTP/1.1")
+    parse = Parser.new(client)
 
+    assert_equal "GET", parse.verb
   end
 
   def test_we_can_extricate_the_path
+    client = StringIO.new("GET / HTTP/1.1")
+    parse = Parser.new(client)
 
+    assert_equal "/", parse.path
   end
 
 end

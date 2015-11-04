@@ -8,8 +8,4 @@ class HttpYeahYouKnowMeTest < Minitest::Test
 
   end
 
-  def test_word_search
-
-  end
-
 end
