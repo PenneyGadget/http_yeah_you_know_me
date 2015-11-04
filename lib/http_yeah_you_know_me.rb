@@ -23,7 +23,7 @@ class HttpYeahYouKnowMe #(aka the server)
   end
 
   def word_search
-
+    File.read("/usr/share/dict/words").split.include?(path)
   end
 
   def build_response_body(request_lines)
