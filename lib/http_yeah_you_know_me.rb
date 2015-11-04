@@ -28,6 +28,8 @@ class HttpYeahYouKnowMe
         if counter == 0
           info["Verb"] = line.split(" ").first
           info["Path"] = line.split(" ")[1]
+          #info["Param"] =
+          #info["Value"]
           info["Protocol"] = line.split(" ")[2]
         else
           keyval = line.scan(/([^:]*):(.*$)/)
@@ -38,12 +40,19 @@ class HttpYeahYouKnowMe
     info
   end
 
+  def dictionary_search
+
+  end
+
   def build_response_body(parse_request)
     response = "<pre>"
 
     case parse_request["Path"]
       when "/"
         #do nothing
+      #when "/word_search"
+        #search through dictionary
+        #response += dictionary_search(parse_request["Value"])
       when "/hello"
         response += "Hello, World! (#{@hello_requests})\n\n"
         @hello_requests += 1
