@@ -1,7 +1,8 @@
 require 'pry'
 require 'socket'
+require_relative 'parser'
 
-class HttpYeahYouKnowMe
+class HttpYeahYouKnowMe #(aka the server)
 
   def initialize(port)
     @server = TCPServer.new(port)
@@ -13,7 +14,7 @@ class HttpYeahYouKnowMe
   def run
     loop do
       client = @server.accept
-      request_lines = parse_request(client)
+      request_lines = Parser.new(client).parse_request
       output = build_response_body(request_lines)
       headers = build_response_headers(output)
       return_response(client, headers, output)
@@ -21,33 +22,14 @@ class HttpYeahYouKnowMe
     client.close
   end
 
-  def parse_request(client)
-    counter = 0
-    info = Hash.new
-    while line = client.gets and !line.chomp.empty?
-        if counter == 0
-          info["Verb"] = line.split(" ").first
-          info["Path"] = line.split(" ")[1]
-          #info["Param"] =
-          #info["Value"]
-          info["Protocol"] = line.split(" ")[2]
-        else
-          keyval = line.scan(/([^:]*):(.*$)/)
-          info[keyval[0][0]] = keyval[0][1]
-        end
-        counter += 1
-      end
-    info
-  end
-
-  def dictionary_search
+  def word_search
 
   end
 
-  def build_response_body(parse_request)
+  def build_response_body(request_lines)
     response = "<pre>"
 
-    case parse_request["Path"]
+    case request_lines["Path"]
       when "/"
         #do nothing
       #when "/word_search"
@@ -65,7 +47,7 @@ class HttpYeahYouKnowMe
         response += "ERROR: Path not found."
     end
 
-    parse_request.each do |key, value|
+    request_lines.each do |key, value|
       response += "#{key}" + ": " + "#{value}\n"
     end
 
