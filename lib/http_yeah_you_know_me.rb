@@ -24,10 +24,6 @@ class HttpYeahYouKnowMe #(aka the server)
     client.close
   end
 
-  def word_search
-    File.read("/usr/share/dict/words").split.include?(path)
-  end
-
   def return_response(client, output)
     # client.puts headers
     client.puts output

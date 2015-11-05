@@ -12,9 +12,13 @@ class Parser
     while line = @client.gets and !line.chomp.empty?
         if counter == 0
           info["Verb"] = line.split(" ").first
-          info["Path"] = line.split(" ")[1]
-          #info["Param"] =
-          #info["Value"]
+          path = line.split(" ")[1]
+          components = path.scan(/([^\?]*)\??([^=]*)=?(.*)/)
+          #[["word", "Hello"], ["param2", "value2"], ["param3", "value3"]]
+          info["Path"] = components[0][0]
+          info["Param"] = components[0][1]
+          info["Value"] = components[0][2]
+
           info["Protocol"] = line.split(" ")[2]
         else
           keyval = line.scan(/([^:]*):(.*$)/)

@@ -1,3 +1,4 @@
+require_relative 'word_search'
 
 class Response
 
@@ -18,9 +19,9 @@ class Response
     case @request_lines["Path"]
       when "/"
         #do nothing
-      #when "/word_search"
-        #search through dictionary
-        #response += dictionary_search(parse_request["Value"])
+      when "/word_search"
+        word = WordSearch.new(@request_lines["Value"])
+        response += word.word_search + "\n\n"
       when "/hello"
         response += "Hello, World! (#{$hello_requests})\n\n"
         $hello_requests += 1
@@ -34,7 +35,9 @@ class Response
     end
 
     @request_lines.each do |key, value|
-      response += "#{key}" + ": " + "#{value}\n"
+      if key != "Param" && key != "Value"
+        response += "#{key}" + ": " + "#{value}\n"
+      end
     end
 
     response += "</pre>"
