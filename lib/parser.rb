@@ -1,15 +1,10 @@
-require 'pry'
 
 class Parser
 
-  def initialize(client)
-    @client = client
-  end
-
-  def parse_request
+  def parse_request(client)
     counter = 0
     info = Hash.new
-    while line = @client.gets and !line.chomp.empty?
+    while line = client.gets and !line.chomp.empty?
         if counter == 0
           info["Verb"] = line.split(" ").first
           path = line.split(" ")[1]
