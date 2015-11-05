@@ -17,32 +17,34 @@ class Path
   end
 
   def process_path(request_lines)
-    @path = request_lines["Path"]
-    @verb = request_lines["Verb"]
-    @param = request_lines["Param"]
-    @value = request_lines["Value"]
+    components = request_lines["Path"].scan(/([^\?]*)\??([^=]*)=?(.*)/)
+    
+    path = components[0][0]
+    param = components[0][1]
+    value = components[0][2]
+    verb = request_lines["Verb"]
 
-    case @path
+    case path
     when "/"
       #do nothing
     when "/datetime"
       @response.datetime
     when "/word_search"
-      @response.word_search(@value)
+      @response.word_search(value)
     when "/hello"
       @response.hello(@hello_requests)
     when "/shutdown"
       @response.shutdown(@all_requests)
     when "/start_game"
-      if @verb == "POST"
+      if verb == "POST"
         #begin game
         @response.start_game
       end
     when "/game"
       #process game
-      if @verb == "GET"
+      if verb == "GET"
         @response.game(@game_guesses, @current_guess, @guess_status)
-      elsif @verb == "POST"
+      elsif verb == "POST"
         #redirect to /game
       end
     else
