@@ -18,7 +18,7 @@ class Path
 
   def process_path(request_lines)
     components = request_lines["Path"].scan(/([^\?]*)\??([^=]*)=?(.*)/)
-    
+
     path = components[0][0]
     param = components[0][1]
     value = components[0][2]
@@ -43,7 +43,7 @@ class Path
     when "/game"
       #process game
       if verb == "GET"
-        @response.game(@game_guesses, @current_guess, @guess_status)
+        @response.game_stats(@game_guesses, @current_guess, @guess_status)
       elsif verb == "POST"
         #redirect to /game
       end

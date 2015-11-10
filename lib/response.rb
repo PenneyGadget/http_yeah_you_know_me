@@ -1,34 +1,34 @@
-require_relative 'word_search'
-
 class Response
 
-  def root
-    #do nothing
-  end
+  # def root
+  #   #do nothing
+  # end
+  #Does this need to be here?
 
   def hello(requests)
     "Hello, World! (#{requests})\n\n"
   end
 
   def datetime
-    Time.now.strftime("%I:%M%p on %A, %B %e, %Y") + "\n\n"
+    Time.now.strftime("%I:%M%p on %A, %B %e, %Y\n\n")
   end
 
   def shutdown(requests)
     "Total Requests: #{requests}\n\n"
   end
 
-  def word_search(value)
-    word = WordSearch.new(value)
-    word.word_search + "\n\n"
-  end
+  # def word_search(value)
+  #   word = WordSearch.new(value)
+  #   word.word_search + "\n\n"
+  # end
+  ##Move to word search class!
 
   def start_game
     "Good Luck!"
   end
 
-  def game(game_guesses, current_guess, guess_status)
-    "You have taken #{game_guesses}\nYour Guess of #{current_guess} is #{guess_status}"
+  def game_stats(game_guesses, current_guess, guess_status)
+    "You have taken #{game_guesses} guesses.\nYour Guess of #{current_guess} is #{guess_status}.\n\n"
   end
 
   def build_response_headers(content_length)

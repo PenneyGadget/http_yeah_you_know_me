@@ -17,7 +17,6 @@ class HttpYeahYouKnowMe #(aka the server)
     @game_guesses = 0
     @current_guess = 0
     @guess_status = ""
-``
     @parser = Parser.new
     @path = Path.new
     @response = Response.new
