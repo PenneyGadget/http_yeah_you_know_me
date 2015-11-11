@@ -27,6 +27,27 @@ class ResponseTest < Minitest::Test
     assert_equal "Total Requests: 12\n\n", output
   end
 
+  def test_word_search_response_for_a_valid_word
+    r = Response.new
+    word = r.word_search("eggplant")
+
+    assert_equal "EGGPLANT is a word!\n\n", word
+  end
+
+  def test_word_search_response_is_case_insensitive
+    r = Response.new
+    word = r.word_search("ExCELLent")
+
+    assert_equal "EXCELLENT is a word!\n\n", word
+  end
+
+  def test_word_search_response_for_an_invalid_word
+    r = Response.new
+    word = r.word_search("Blarg")
+
+    assert_equal "You are very bad at English.\n\n", word
+  end
+
   def test_start_game_response
     r = Response.new
     output = r.start_game

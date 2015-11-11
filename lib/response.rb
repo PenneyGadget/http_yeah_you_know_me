@@ -1,10 +1,5 @@
 class Response
 
-  # def root
-  #   #do nothing
-  # end
-  #Does this need to be here?
-
   def hello(requests)
     "Hello, World! (#{requests})\n\n"
   end
@@ -17,11 +12,14 @@ class Response
     "Total Requests: #{requests}\n\n"
   end
 
-  # def word_search(value)
-  #   word = WordSearch.new(value)
-  #   word.word_search + "\n\n"
-  # end
-  ##Move to word search class!
+  def word_search(word)
+    dictionary = File.read("/usr/share/dict/words").split("\n")
+    if dictionary.include?(word.downcase)
+      "#{word.upcase} is a word!\n\n"
+    else
+      "You are very bad at English.\n\n"
+    end
+  end
 
   def start_game
     "Good Luck!"

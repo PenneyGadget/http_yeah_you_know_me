@@ -23,7 +23,7 @@ class HttpYeahYouKnowMe #(aka the server)
     @diagnostics = Diagnostics.new
   end
 
-  def run
+  def run #datetime and word search?
     loop do
       client = @server.accept
       request = @parser.parse_request(client)
