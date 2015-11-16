@@ -12,7 +12,7 @@ class Response
     "Total Requests: #{requests}\n\n"
   end
 
-  def word_search(word)
+  def word_search(word) ##runs in the browser like so: http://0.0.0.0:9292/word_search?param=hello
     dictionary = File.read("/usr/share/dict/words").split("\n")
     if dictionary.include?(word.downcase)
       "#{word.upcase} is a word!\n\n"
